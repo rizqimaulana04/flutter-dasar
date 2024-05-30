@@ -21,23 +21,40 @@ class ProdukDetailState extends State<ProdukDetail> {
       appBar: AppBar(
         title: const Text('Detail Produk'),
       ),
-      body: Center(
-        child: Column(
-          children: [
-            Text(
-              "Kode : ${widget.produk!.kodeProduk}",
-              style: const TextStyle(fontSize: 20.0),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Center(
+          child: Card(
+            elevation: 4,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(16),
             ),
-            Text(
-              "Nama : ${widget.produk!.namaProduk}",
-              style: const TextStyle(fontSize: 18.0),
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    "Kode : ${widget.produk!.kodeProduk}",
+                    style: const TextStyle(
+                        fontSize: 20.0, fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(height: 10),
+                  Text(
+                    "Nama : ${widget.produk!.namaProduk}",
+                    style: const TextStyle(fontSize: 18.0),
+                  ),
+                  const SizedBox(height: 10),
+                  Text(
+                    "Harga : Rp. ${widget.produk!.hargaProduk.toString()}",
+                    style: const TextStyle(fontSize: 18.0),
+                  ),
+                  const SizedBox(height: 20),
+                  _tombolHapusEdit(),
+                ],
+              ),
             ),
-            Text(
-              "Harga : Rp. ${widget.produk!.hargaProduk.toString()}",
-              style: const TextStyle(fontSize: 18.0),
-            ),
-            _tombolHapusEdit()
-          ],
+          ),
         ),
       ),
     );
@@ -45,11 +62,16 @@ class ProdukDetailState extends State<ProdukDetail> {
 
   Widget _tombolHapusEdit() {
     return Row(
-      mainAxisSize: MainAxisSize.min,
+      mainAxisAlignment: MainAxisAlignment.center,
       children: [
         // Tombol Edit
-        OutlinedButton(
-          child: const Text("EDIT"),
+        ElevatedButton.icon(
+          icon: const Icon(Icons.edit),
+          label: const Text("EDIT"),
+          style: ElevatedButton.styleFrom(
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+            textStyle: const TextStyle(fontSize: 16),
+          ),
           onPressed: () {
             Navigator.push(
               context,
@@ -61,9 +83,16 @@ class ProdukDetailState extends State<ProdukDetail> {
             );
           },
         ),
+        const SizedBox(width: 20),
         // Tombol Hapus
-        OutlinedButton(
-          child: const Text("DELETE"),
+        ElevatedButton.icon(
+          icon: const Icon(Icons.delete),
+          label: const Text("DELETE"),
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Colors.red,
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+            textStyle: const TextStyle(fontSize: 16),
+          ),
           onPressed: () => confirmHapus(),
         ),
       ],
@@ -75,14 +104,14 @@ class ProdukDetailState extends State<ProdukDetail> {
       content: const Text("Yakin ingin menghapus data ini?"),
       actions: [
         // Tombol hapus
-        OutlinedButton(
+        TextButton(
           child: const Text("Ya"),
           onPressed: () {
             hapus();
           },
         ),
         // Tombol batal
-        OutlinedButton(
+        TextButton(
           child: const Text("Batal"),
           onPressed: () => Navigator.pop(context),
         )
@@ -94,7 +123,7 @@ class ProdukDetailState extends State<ProdukDetail> {
 
   void hapus() {
     ProdukBloc.deleteProduk(id: widget.produk?.id).then((value) {
-      Navigator.of(context).push(MaterialPageRoute(
+      Navigator.of(context).pushReplacement(MaterialPageRoute(
         builder: (BuildContext context) => const ProdukPage(),
       ));
     }, onError: (error) {

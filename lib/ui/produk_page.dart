@@ -77,6 +77,7 @@ class ListProduk extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
+      padding: const EdgeInsets.all(8.0),
       itemCount: list == null ? 0 : list!.length,
       itemBuilder: (context, i) {
         return ItemProduk(
@@ -106,9 +107,37 @@ class ItemProduk extends StatelessWidget {
         );
       },
       child: Card(
+        elevation: 5,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10.0),
+        ),
+        margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 5.0),
         child: ListTile(
-          title: Text(produk.namaProduk!),
-          subtitle: Text(produk.hargaProduk.toString()),
+          contentPadding: const EdgeInsets.all(10.0),
+          leading: CircleAvatar(
+            backgroundColor: Colors.blueAccent,
+            child: Text(
+              produk.namaProduk![0],
+              style:
+                  TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+            ),
+          ),
+          title: Text(
+            produk.namaProduk!,
+            style: const TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          subtitle: Text(
+            'Rp ${produk.hargaProduk.toString()}',
+            style: const TextStyle(
+              color: Colors.green,
+              fontSize: 16,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+          trailing: const Icon(Icons.arrow_forward_ios),
         ),
       ),
     );

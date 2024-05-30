@@ -17,38 +17,106 @@ class RegistrasiPageState extends State<RegistrasiPage> {
   final _namaTextboxController = TextEditingController();
   final _emailTextboxController = TextEditingController();
   final _passwordTextboxController = TextEditingController();
+  final _passwordKonfirmasiTextboxController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("Registrasi"),
-      ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Form(
-            key: _formKey,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                _namaTextField(),
-                _emailTextField(),
-                _passwordTextField(),
-                _passwordKonfirmasiTextField(),
-                _buttonRegistrasi()
-              ],
+      body: Stack(
+        children: [
+          Container(
+            decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                colors: [Colors.blue, Colors.lightBlueAccent],
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+              ),
             ),
           ),
-        ),
+          Column(
+            children: [
+              // Teks "Maulkuadrat" sebagai judul di atas card
+              Container(
+                alignment: Alignment.center,
+                margin: const EdgeInsets.only(top: 50.0),
+                child: Text(
+                  'Maulkuadrat',
+                  style: TextStyle(
+                      fontSize: 32,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                      fontFamily: 'JuiceboxScript',
+                      shadows: [
+                        Shadow(
+                          color: Colors.black,
+                          offset: Offset(2, 2),
+                          blurRadius: 4,
+                        ),
+                      ]),
+                ),
+              ),
+              Expanded(
+                child: Center(
+                  child: SingleChildScrollView(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Card(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10.0),
+                      ),
+                      elevation: 8.0,
+                      child: Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Form(
+                          key: _formKey,
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Text(
+                                'Registrasi',
+                                style: TextStyle(
+                                  fontSize: 24,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.blue,
+                                ),
+                              ),
+                              const SizedBox(height: 20),
+                              _namaTextField(),
+                              const SizedBox(height: 20),
+                              _emailTextField(),
+                              const SizedBox(height: 20),
+                              _passwordTextField(),
+                              const SizedBox(height: 20),
+                              _passwordKonfirmasiTextField(),
+                              const SizedBox(height: 30),
+                              _buttonRegistrasi(),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+          if (_isLoading)
+            const Center(
+              child: CircularProgressIndicator(),
+            ),
+        ],
       ),
     );
   }
 
-  // Membuat Textbox Nama
   Widget _namaTextField() {
     return TextFormField(
-      decoration: const InputDecoration(labelText: "Nama"),
+      decoration: InputDecoration(
+        labelText: "Nama",
+        prefixIcon: Icon(Icons.person),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10.0),
+        ),
+      ),
       keyboardType: TextInputType.text,
       controller: _namaTextboxController,
       validator: (value) {
@@ -60,17 +128,21 @@ class RegistrasiPageState extends State<RegistrasiPage> {
     );
   }
 
-  // Membuat Textbox Email
   Widget _emailTextField() {
     return TextFormField(
-      decoration: const InputDecoration(labelText: "Email"),
+      decoration: InputDecoration(
+        labelText: "Email",
+        prefixIcon: Icon(Icons.email),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10.0),
+        ),
+      ),
       keyboardType: TextInputType.emailAddress,
       controller: _emailTextboxController,
       validator: (value) {
         if (value!.isEmpty) {
           return 'Email harus diisi';
         }
-        // Validasi email
         Pattern pattern =
             r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
         RegExp regex = RegExp(pattern.toString());
@@ -82,10 +154,15 @@ class RegistrasiPageState extends State<RegistrasiPage> {
     );
   }
 
-  // Membuat Textbox Password
   Widget _passwordTextField() {
     return TextFormField(
-      decoration: const InputDecoration(labelText: "Password"),
+      decoration: InputDecoration(
+        labelText: "Password",
+        prefixIcon: Icon(Icons.lock),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10.0),
+        ),
+      ),
       keyboardType: TextInputType.text,
       obscureText: true,
       controller: _passwordTextboxController,
@@ -98,12 +175,18 @@ class RegistrasiPageState extends State<RegistrasiPage> {
     );
   }
 
-  // Membuat Textbox Konfirmasi Password
   Widget _passwordKonfirmasiTextField() {
     return TextFormField(
-      decoration: const InputDecoration(labelText: "Konfirmasi Password"),
+      decoration: InputDecoration(
+        labelText: "Konfirmasi Password",
+        prefixIcon: Icon(Icons.lock),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10.0),
+        ),
+      ),
       keyboardType: TextInputType.text,
       obscureText: true,
+      controller: _passwordKonfirmasiTextboxController,
       validator: (value) {
         if (value != _passwordTextboxController.text) {
           return "Konfirmasi Password tidak sama";
@@ -113,10 +196,15 @@ class RegistrasiPageState extends State<RegistrasiPage> {
     );
   }
 
-  // Membuat Tombol Registrasi
   Widget _buttonRegistrasi() {
     return ElevatedButton(
-      child: const Text("Registrasi"),
+      style: ElevatedButton.styleFrom(
+        padding: EdgeInsets.symmetric(horizontal: 50, vertical: 15),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10.0),
+        ),
+      ),
+      child: const Text("Registrasi", style: TextStyle(fontSize: 18)),
       onPressed: () {
         var validate = _formKey.currentState!.validate();
         if (validate) {

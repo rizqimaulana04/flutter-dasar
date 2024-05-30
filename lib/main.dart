@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tokokita/ui/splash_screen.dart';
 import 'package:tokokita/helpers/user_info.dart';
 import 'package:tokokita/ui/login_page.dart';
 import 'package:tokokita/ui/produk_page.dart';
@@ -41,6 +42,9 @@ class MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-        title: 'Toko Kita', debugShowCheckedModeBanner: false, home: page);
+      title: 'Toko Kita',
+      debugShowCheckedModeBanner: false,
+      home: const SplashScreen(),
+    );
   }
 }

@@ -6,13 +6,13 @@ import 'package:tokokita/ui/registrasi_page.dart';
 import 'package:tokokita/widget/warning_dialog.dart';
 
 class LoginPage extends StatefulWidget {
-  const LoginPage({super.key});
+  const LoginPage({Key? key}) : super(key: key);
 
   @override
-  LoginPageState createState() => LoginPageState();
+  _LoginPageState createState() => _LoginPageState();
 }
 
-class LoginPageState extends State<LoginPage> {
+class _LoginPageState extends State<LoginPage> {
   final _formKey = GlobalKey<FormState>();
   bool _isLoading = false;
 
@@ -22,32 +22,100 @@ class LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Login'),
-      ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Form(
-            key: _formKey,
-            child: Column(
-              children: [
-                _emailTextField(),
-                _passwordTextField(),
-                _buttonLogin(),
-                const SizedBox(height: 30),
-                _menuRegistrasi(),
-              ],
+      body: Stack(
+        children: [
+          // Background Gradient
+          Container(
+            decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                colors: [Colors.blue, Colors.lightBlueAccent],
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+              ),
             ),
           ),
-        ),
+          Align(
+            alignment: Alignment.topCenter,
+            child: Container(
+              margin: const EdgeInsets.only(top: 50.0),
+              child: Text(
+                'Maulkuadrat',
+                style: TextStyle(
+                    fontSize: 32,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                    fontFamily: 'JuiceboxScript',
+                    shadows: [
+                      Shadow(
+                        color: Colors.black,
+                        offset: Offset(2, 2),
+                        blurRadius: 4,
+                      ),
+                    ]),
+              ),
+            ),
+          ),
+          Center(
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Card(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10.0),
+                    ),
+                    elevation: 8.0,
+                    child: Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Form(
+                        key: _formKey,
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text(
+                              'Login',
+                              style: TextStyle(
+                                fontSize: 24,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.blue,
+                              ),
+                            ),
+                            const SizedBox(height: 20),
+                            _emailTextField(),
+                            const SizedBox(height: 20),
+                            _passwordTextField(),
+                            const SizedBox(height: 30),
+                            _buttonLogin(),
+                            const SizedBox(height: 30),
+                            _menuRegistrasi(),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          if (_isLoading)
+            const Center(
+              child: CircularProgressIndicator(),
+            ),
+        ],
       ),
     );
   }
 
   Widget _emailTextField() {
     return TextFormField(
-      decoration: const InputDecoration(labelText: "Email"),
+      decoration: InputDecoration(
+        labelText: "Email",
+        prefixIcon: Icon(Icons.email),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10.0),
+        ),
+      ),
       keyboardType: TextInputType.emailAddress,
       controller: _emailTextboxController,
       validator: (value) {
@@ -61,7 +129,13 @@ class LoginPageState extends State<LoginPage> {
 
   Widget _passwordTextField() {
     return TextFormField(
-      decoration: const InputDecoration(labelText: "Password"),
+      decoration: InputDecoration(
+        labelText: "Password",
+        prefixIcon: Icon(Icons.lock),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10.0),
+        ),
+      ),
       keyboardType: TextInputType.text,
       obscureText: true,
       controller: _passwordTextboxController,
@@ -76,7 +150,13 @@ class LoginPageState extends State<LoginPage> {
 
   Widget _buttonLogin() {
     return ElevatedButton(
-      child: const Text("Login"),
+      style: ElevatedButton.styleFrom(
+        padding: EdgeInsets.symmetric(horizontal: 50, vertical: 15),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10.0),
+        ),
+      ),
+      child: const Text("Login", style: TextStyle(fontSize: 18)),
       onPressed: () {
         var validate = _formKey.currentState!.validate();
         if (validate) {
@@ -127,7 +207,7 @@ class LoginPageState extends State<LoginPage> {
       child: InkWell(
         child: const Text(
           "Registrasi",
-          style: TextStyle(color: Colors.blue),
+          style: TextStyle(color: Colors.blue, fontWeight: FontWeight.bold),
         ),
         onTap: () {
           Navigator.push(
